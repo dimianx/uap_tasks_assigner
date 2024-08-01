@@ -48,6 +48,7 @@ option(BUILD_TESTS "Build the unit tests" ON)
 if(BUILD_TESTS)
   enable_testing()
   include(FetchContent)
+
   FetchContent_Declare(
     googletest
     URL https://github.com/google/googletest/archive/release-1.11.0.tar.gz
