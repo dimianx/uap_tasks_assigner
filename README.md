@@ -43,7 +43,7 @@ The cost matrix should be of size \( N \times M \), where \( N \) is the number 
 
 ### Example
 
-``cpp
+```cpp
 #include <iostream>
 
 #include <Eigen/Core>
@@ -78,7 +78,7 @@ int main()
 
   return 0;
 }
-``
+```
 
 ## References
 - Kumar, Avanish. "A modified method for solving the unbalanced assignment problems." Applied mathematics and computation 176.1 (2006): 76-82.
