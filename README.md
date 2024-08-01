@@ -1,7 +1,7 @@
 # UAPTasksAssigner
 
 UAPTasksAssigner is a header-only C++ library designed for solving unbalanced assignment problem. 
-The library supports solving the unbalanced assignment problem where the number of tasks does not equal the number of resources:
+The library supports solving the unbalanced assignment problem where the number of tasks does not equal the number of agents (resources):
 
 $$
 \text{min} \sum_{i=1}^{m} \sum_{j=1}^{n} C_{ij} X_{ij}
@@ -32,6 +32,29 @@ where:
 ### Prerequisites
 - C++17 or later
 - Eigen (version 3.3 or later)
+- CMake (version 3.10 or later)
+
+### Steps
+
+1. **Clone the repository:**
+   ```sh
+   git clone https://github.com/your-username/UAPTasksAssigner.git
+   cd UAPTasksAssigner
+   ```
+2. **Run CMake:**
+   ```sh
+   # Create temporary folder.
+   mkdir temp
+   cd temp
+   cmake ..
+   # Install the header file and CMake module. 
+   sudo make install
+   ```
+3. **Deinstallation**
+   ```sh
+   # In temporary folder.
+   sudo xargs rm < install_manifest.txt 
+   ```
 
 ## Usage
 To use the UAPTasksAssigner, include the header and create an instance of the class. Define a cost matrix and call the `assign` method to get the optimal assignments of tasks to resources.
@@ -81,4 +104,4 @@ int main()
 ```
 
 ## References
-- Rabbani, Quazzafi, Aamir Khan, and Abdul Quddoos. "Modified Hungarian method for unbalanced assignment problem with multiple jobs." Applied Mathematics and Computation 361 (2019): 493-498.
+- Rabbani, Quazzafi, Aamir Khan, and Abdul Quddoos. "Modified Hungarian method for unbalanced assignment problem with multiple jobs." Applied Mathematics and Computation 361 (2019): 493-498. [Link](https://doi.org/10.1016/j.amc.2019.05.041)

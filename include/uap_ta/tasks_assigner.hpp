@@ -112,21 +112,39 @@ int UAPTasksAssigner::calcSumOfLines(const Eigen::MatrixXi& lines)
          (row_sum.array() == lines.cols()).count();          
 }
 
-std::vector<std::pair<int, int>> UAPTasksAssigner::findIntersectingPoints(const Eigen::MatrixXi& lines)
+std::vector<std::pair<int, int>> UAPTasksAssigner::findIntersectingPoints(const Eigen::MatrixXi& lines) 
 {
   std::vector<std::pair<int, int>> indices;
 
   for (int row = 0; row < lines.rows(); ++row) 
   {
-    for (int col = 0; col < lines.cols(); ++col)
+    for (int col = 0; col < lines.cols(); ++col) 
     {
-      if (lines(row, col) == 1 && 
-          (col == 0 || lines(row, col - 1) == 1) && 
-          (col == lines.cols() - 1 || lines(row, col + 1) == 1) &&
-          (row == 0 || lines(row - 1, col) == 1) && 
-          (row == lines.rows() - 1 || lines(row + 1, col) == 1))
+      if (lines(row, col) == 1) 
       {
-        indices.emplace_back(row, col);
+        bool is_horizontal_line = true;
+        bool is_vertical_line = true;
+
+        for (int k = 0; k < lines.cols(); ++k) 
+        {
+          if (lines(row, k) != 1) 
+          {
+            is_horizontal_line = false;
+            break;
+          }
+        }
+
+        for (int k = 0; k < lines.rows(); ++k) 
+        {
+          if (lines(k, col) != 1) 
+          {
+            is_vertical_line = false;
+            break;
+          }
+        }
+
+        if (is_horizontal_line && is_vertical_line) 
+          indices.emplace_back(row, col);
       }
     }
   }
@@ -136,22 +154,22 @@ std::vector<std::pair<int, int>> UAPTasksAssigner::findIntersectingPoints(const 
 
 std::unordered_map<int, std::pair<int, std::vector<int>>> UAPTasksAssigner::assign(Eigen::MatrixXi& cost_matrix)
 {
+  if (cost_matrix.cols() < cost_matrix.rows())
+    throw std::invalid_argument("Number of tasks cannot be less than the number of agents.");
+
   auto cost_matrix_orig = cost_matrix;
 
   std::unordered_map<int, std::pair<int, std::vector<int>>> assignments = {};
-  for (int i = 0; i < cost_matrix.rows(); i++)
+  for (int i = 0; i < cost_matrix.rows(); ++i)
     assignments.insert({i, {}});
 
   Eigen::VectorXi min_col_coeffs = cost_matrix.colwise().minCoeff();
-  for (int  i= 0; i < min_col_coeffs.size(); i++)
-    for (int j = 0; j < cost_matrix.rows(); j++)
-      cost_matrix(j, i) -= min_col_coeffs(i);
+  for (int i = 0; i < cost_matrix.cols(); ++i)
+    cost_matrix.col(i) -= Eigen::VectorXi::Constant(cost_matrix.rows(), min_col_coeffs(i));
 
-    
   Eigen::VectorXi min_row_coeffs = cost_matrix.rowwise().minCoeff();
-  for (int i = 0; i < min_row_coeffs.size(); i++)
-    for (int j = 0; j < cost_matrix.cols(); j++)
-      cost_matrix(i, j) -= min_row_coeffs(i);
+  for (int i = 0; i < cost_matrix.rows(); ++i)
+      cost_matrix.row(i) -= Eigen::RowVectorXi::Constant(cost_matrix.cols(), min_row_coeffs(i));
       
   Eigen::MatrixXi lines = drawMinLines(cost_matrix);
   int num_lines = calcSumOfLines(lines);
@@ -172,80 +190,54 @@ std::unordered_map<int, std::pair<int, std::vector<int>>> UAPTasksAssigner::assi
 
     std::vector<std::pair<int, int>> intersections = findIntersectingPoints(lines);
     for (auto kv : intersections)
-    {
       cost_matrix(kv.first, kv.second) += min_cost;
-    }
 
     lines = drawMinLines(cost_matrix);
     num_lines = calcSumOfLines(lines);
   }
 
 
-  while ((cost_matrix.array() == 0).any())
+  while ((cost_matrix.array() == 0).any()) 
   {
     for (int i = 0; i < cost_matrix.rows(); i++) 
     {
       auto row = cost_matrix.row(i);
       int num_zeros = (row.array() == 0).count();
       std::pair<int, int> assignment = {-1, -1};
-      if (num_zeros == 1)
-      {
-        for (int j = 0; j < row.size(); j++)
-          if (row(j) == 0)
-            assignment = {i, j};  
 
-        if (assignment != std::pair<int, int>{-1, -1})
-        {        
-          cost_matrix(assignment.first, assignment.second) = -1;
-
-          for (int k = assignment.first; k < cost_matrix.rows(); k++)
-            if (cost_matrix(k, assignment.second) == 0)
-              cost_matrix(k, assignment.second) = -2;
-
-          for (int k = assignment.first; k >=0; k--)
-            if (cost_matrix(k, assignment.second) == 0)
-              cost_matrix(k, assignment.second) = -2;
-        }
-        assignments.at(assignment.first).first += cost_matrix_orig(assignment.first, assignment.second);
-        assignments.at(assignment.first).second.push_back(assignment.second);
-      }
-    }
-
-    for (int i = 0; i < cost_matrix.rows(); i++) 
-    {
-      auto row = cost_matrix.row(i);
-      int num_zeros = (row.array() == 0).count();
-      std::pair<int, int> assignment = {-1, -1};
-
-      if (num_zeros > 1)
+      if (num_zeros == 1 || num_zeros > 1) 
       {
         int min_row_cost = std::numeric_limits<int>::max();
 
-        for (int j = 0; j < row.size(); j++)
+        for (int j = 0; j < row.size(); j++) 
         {
-          if (cost_matrix_orig(i, j) < min_row_cost && row(j) == 0)
+          if (row(j) == 0) 
           {
-            min_row_cost = cost_matrix_orig(i, j);
-            assignment = {i, j};
+            if (num_zeros == 1 || cost_matrix_orig(i, j) < min_row_cost) 
+            {
+              min_row_cost = cost_matrix_orig(i, j);
+              assignment = {i, j};
+            }
           }
         }
-        if (assignment != std::pair<int, int>{-1, -1})
-        {        
-          cost_matrix(assignment.first, assignment.second) = -1;
+      }
 
-          for (int k = assignment.first; k < cost_matrix.rows(); k++)
-            if (cost_matrix(k, assignment.second) == 0)
-              cost_matrix(k, assignment.second) = -2;
+      if (assignment != std::pair<int, int>{-1, -1}) 
+      {
+        cost_matrix(assignment.first, assignment.second) = -1;
 
-          for (int k = assignment.first; k >=0; k--)
-            if (cost_matrix(k, assignment.second) == 0)
-              cost_matrix(k, assignment.second) = -2;
+        for (int k = 0; k < cost_matrix.rows(); k++) 
+        {
+          if (cost_matrix(k, assignment.second) == 0)
+            cost_matrix(k, assignment.second) = -1;
         }
+
         assignments.at(assignment.first).first += cost_matrix_orig(assignment.first, assignment.second);
         assignments.at(assignment.first).second.push_back(assignment.second);
       }
     }
   }
+
   return assignments;
 }
 
