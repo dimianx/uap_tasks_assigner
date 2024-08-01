@@ -104,4 +104,4 @@ int main()
 ```
 
 ## References
-- Rabbani, Quazzafi, Aamir Khan, and Abdul Quddoos. "Modified Hungarian method for unbalanced assignment problem with multiple jobs." Applied Mathematics and Computation 361 (2019): 493-498. [Link](https://doi.org/10.1016/j.amc.2019.05.041)
+-  [Rabbani, Quazzafi, Aamir Khan, and Abdul Quddoos. "Modified Hungarian method for unbalanced assignment problem with multiple jobs." Applied Mathematics and Computation 361 (2019): 493-498.](https://doi.org/10.1016/j.amc.2019.05.041)
