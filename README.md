@@ -9,17 +9,20 @@ $$
 
 Subject to:
 1. Each task must be assigned to exactly one resource:
+
    $$
    \sum_{j=0}^{n} X_{ij} \geq 1, \quad i = 0, 1, 2, \dots, m
    $$
 
 2. Each resource can be assigned to at most one task:
+
    $$
    \sum_{i=0}^{m} X_{ij} = 1, \quad j = 0, 1, 2, \dots, n
    $$
 
 3. The decision variables are binary:
-   $$
+
+    $$
    X_{ij} \in \{0, 1\}
    $$
 
