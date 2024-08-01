@@ -35,7 +35,7 @@ where:
 
 ## Usage
 To use the UAPTasksAssigner, include the header and create an instance of the class. Define a cost matrix and call the `assign` method to get the optimal assignments of tasks to resources.
-The cost matrix should be of size \( N \times M \), where \( N \) is the number of agents (resources) and \( M \) is the number of tasks. The `assign` method returns a `std::unordered_map<int, std::pair<int, std::vector<int>>>` where:
+The cost matrix should be of size \( N $\times$ M \), where \( N \) is the number of agents (resources) and \( M \) is the number of tasks. The `assign` method returns a `std::unordered_map<int, std::pair<int, std::vector<int>>>` where:
 - The key (int) is the agent number.
 - The value is a `std::pair` consisting of:
   - The total cost for the agent as the first element.
