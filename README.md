@@ -81,4 +81,4 @@ int main()
 ```
 
 ## References
-- Kumar, Avanish. "A modified method for solving the unbalanced assignment problems." Applied mathematics and computation 176.1 (2006): 76-82.
+- Rabbani, Quazzafi, Aamir Khan, and Abdul Quddoos. "Modified Hungarian method for unbalanced assignment problem with multiple jobs." Applied Mathematics and Computation 361 (2019): 493-498.
