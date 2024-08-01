@@ -52,7 +52,7 @@ where:
    ```
 3. **Deinstallation**
    ```sh
-   # In temporary folder.
+   # In created temporary folder.
    sudo xargs rm < install_manifest.txt 
    ```
 
