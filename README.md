@@ -24,8 +24,8 @@ Subject to:
 ```
 
 where:
-- \( C_{ij} \) represents the cost of assigning task \( i \) to resource \( j \).
-- \( X_{ij} \) is a binary variable that is 1 if task \( i \) is assigned to resource \( j \), and 0 otherwise.
+-  $C_{ij}$  represents the cost of assigning task \( i \) to resource \( j \).
+-  $X_{ij}$  is a binary variable that is 1 if task \( i \) is assigned to resource \( j \), and 0 otherwise.
 
 
 ## Installation
@@ -38,8 +38,8 @@ To use the UAPTasksAssigner, include the header and create an instance of the cl
 The cost matrix should be of size \( N \times M \), where \( N \) is the number of agents (resources) and \( M \) is the number of tasks. The `assign` method returns a `std::unordered_map<int, std::pair<int, std::vector<int>>>` where:
 - The key (int) is the agent number.
 - The value is a `std::pair` consisting of:
-  - The total cost for the agent as the first element (int).
-  - A vector of task numbers assigned to the agent as the second element (`std::vector<int>`).
+  - The total cost for the agent as the first element.
+  - A vector of task numbers assigned to the agent as the second element.
 
 ### Example
 
