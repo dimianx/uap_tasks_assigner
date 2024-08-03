@@ -38,7 +38,7 @@ where:
 
 1. **Clone the repository:**
    ```sh
-   git clone https://github.com/your-username/UAPTasksAssigner.git
+   git clone https://github.com/dimianx/UAPTasksAssigner.git
    cd UAPTasksAssigner
    ```
 2. **Run CMake:**
